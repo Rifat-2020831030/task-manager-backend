@@ -1,0 +1,12 @@
+1. connecting to mysql database - done
+2. run a query for check and
+    if successful 
+        run the server
+    else
+        log error
+3. create a controller file
+4. inside that create a task controller which will
+    manages each operation with respected path
+
+
+alter table profile
