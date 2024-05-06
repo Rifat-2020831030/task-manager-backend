@@ -3,7 +3,9 @@ const jwt = require('jsonwebtoken');
 
 const admin = async (req, res, next)=>{
     try {
-        const {"x-auth-token": userToken} = req.headers;
+        const {"authorization": userToken} = req.headers;
+
+        if(!userToken) return res.status(401).json({err:"NO auth token found"});
 
         const verify = jwt.verify(userToken, process.env.private_key); // if user exist return email else return null
 

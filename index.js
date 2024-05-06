@@ -5,8 +5,7 @@ const express = require('express'),
 
 const db = require('./database'),
     taskController = require('./controller/task.controller'),
-    userController = require('./controller/user.controller'),
-    signin = require('./auth/signin');
+    userController = require('./controller/user.controller');
 
 // middlewire
 app.use(parser.json());
