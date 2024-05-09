@@ -36,8 +36,8 @@ db.query('SELECT * from task', (err, res, fields)=>{
 // input : username, email, pass
 // login -> http://localhost:3000/api/signin
 // input : email, pass
-// updating user -> 
-// deleting user -> 
+// updating user -> http://localhost:3000/api/user/update/:id
+// deleting user -> http://localhost:3000/api/user/delete/:id
 
 // get task by user (default)-> http://localhost:3000/api/get/task/:id
 // get all task->  http://localhost:3000/api/get/task/  admin

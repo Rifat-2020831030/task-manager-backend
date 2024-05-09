@@ -87,18 +87,23 @@ router.put('/user/update/:id',admin, (req,res)=>{
         async (err, oldData) =>{
             if(err) console.log(`logging from user update op`,err);
 
-            let [{email,pass,role}] = oldData; //current data
-            email = email || req.body.email, //update data
-            pass = pass || req.body.pass, 
-            role = role || req.body.role;
+            let {username,email,pass,role} = req.body; //current data
+            username = username || oldData[0].username,
+            email = email || oldData[0].email, //update data
+            pass = pass || oldData[0].pass, 
+            role = role || oldData[0].role;
             const hash = await encrypt.hash(pass, saltRounds);
+            console.log(username,email,role);
 
-
-            sql = `UPDATE profile SET email = ?, pass = ?, role = ? WHERE user_id = ?`;
-            db.query(sql, [email,hash,role,req.params.id], 
+            sql = `UPDATE profile SET username = ?, email = ?, pass = ?, role = ? WHERE user_id = ?`;
+            db.query(sql, [username, email,hash,role,req.params.id], 
                 (err, feedback)=>{
                     if(err) console.log(`logging from update user`, err);
-                    else if(feedback.affectedRows) res.status(400).send(feedback);
+                    else if(feedback.affectedRows){
+                        db.query('SELECT * FROM profile WHERE user_id = ?', [req.params.id], async (err, afterupdate)=> {
+                            res.send(afterupdate);
+                        })
+                    }
                     else res.json({err: "There is an error in update operation"})
                 }
             )
@@ -107,7 +112,20 @@ router.put('/user/update/:id',admin, (req,res)=>{
 })
 
 // deleting user
-
+router.delete('/user/delete/:id',admin, (req, res)=>{
+    const id = req.params.id;
+    db.query("DELETE FROM profile WHERE user_id= ?",[id], (err, result, fields)=>{
+        if(err) console.log(err);
+        else{
+            if(result.affectedRows){
+                res.send(`User with id ${id} has been deleted`);
+            }
+            else{
+                res.send(`No user found with the id`);
+            }
+        }
+    })
+})
 
 // login 
 // http://localhost:3000/api/signin/
